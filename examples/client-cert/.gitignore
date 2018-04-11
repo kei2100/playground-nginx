@@ -1,0 +1,3 @@
+openssl-etc/ssl/CA/**/*.pem
+openssl-etc/ssl/CA/index.txt*
+openssl-etc/ssl/CA/serial
