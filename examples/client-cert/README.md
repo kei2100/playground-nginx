@@ -22,9 +22,9 @@ touch ./openssl-etc/ssl/CA/index.txt
 
 docker run -it -v $(pwd)/openssl-etc/ssl:/etc/ssl playground-nginx/openssl:latest \
   openssl ca -create_serial -selfsign -days 1095 -batch -extensions v3_ca \
-                      -out ./CA/cacert.pem \
-                      -in ./CA/careq.pem \
-                      -keyfile ./CA/private/cakey.pem
+             -in ./CA/careq.pem \
+             -out ./CA/cacert.pem \
+             -keyfile ./CA/private/cakey.pem
 ```
 
 ### create CSR for Server
@@ -40,7 +40,7 @@ docker run -it -v $(pwd)/openssl-etc/ssl:/etc/ssl playground-nginx/openssl:lates
 
 ```bash
 docker run -it -v $(pwd)/openssl-etc/ssl:/etc/ssl playground-nginx/openssl:latest \
-  openssl ca -policy policy_anything -days 825 -out ./server/servcert.pem -infiles ./server/servreq.pem
+  openssl ca -days 825 -in ./server/servreq.pem -out ./server/servcert.pem -extensions server_ext
 ```
 
 ### generate NO-PASS-PHRASE key for Server
@@ -48,4 +48,10 @@ docker run -it -v $(pwd)/openssl-etc/ssl:/etc/ssl playground-nginx/openssl:lates
 ```bash
 docker run -it -v $(pwd)/openssl-etc/ssl:/etc/ssl playground-nginx/openssl:latest \
   openssl rsa -in ./server/private/servkey.pem -out ./server/private/servkey-nopass.pem
+```
+
+
+### run Nginx
+```bash
+ docker run -p 8000:80 -p 443:443 -v $(pwd)/openssl-etc/ssl:/etc/ssl -v $(pwd)/nginx-etc/nginx/conf.d:/etc/nginx/conf.d  playground-nginx:latest
 ```

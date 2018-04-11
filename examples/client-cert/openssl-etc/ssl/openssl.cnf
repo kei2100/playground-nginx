@@ -348,3 +348,13 @@ tsa_name		= yes	# Must the TSA name be included in the reply?
 				# (optional, default: no)
 ess_cert_id_chain	= no	# Must the ESS cert id chain be included?
 				# (optional, default: no)
+
+####################################################################
+[ server_ext ]
+basicConstraints = critical, CA:FALSE
+extendedKeyUsage = clientAuth, serverAuth
+keyUsage = critical, digitalSignature, keyEncipherment
+nsCertType = server
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid,issuer
+
