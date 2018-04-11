@@ -68,8 +68,12 @@ docker run -it -v $(pwd)/openssl-etc/ssl:/etc/ssl playground-nginx/openssl:lates
   openssl pkcs12 -export -in ./client/clicert.pem -inkey ./client/private/clikey.pem -out ./client/clicert.pfx -name "my client"
 ```
 
+OSXであればclicert.pfxを開くなどしてキーチェーンにインポートする
+
 ## Test
 ### run Nginx
 ```bash
  docker run -p 8000:80 -p 443:443 -v $(pwd)/openssl-etc/ssl:/etc/ssl -v $(pwd)/nginx-etc/nginx/conf.d:/etc/nginx/conf.d  playground-nginx:latest
 ```
+
+https://localhost/ からのレスポンスヘッダ `X-SSL-Client-Verify` にクライアント認証の結果が入る

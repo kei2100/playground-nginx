@@ -1,3 +1,4 @@
+
 openssl-etc/ssl/CA/**/*.pem
 openssl-etc/ssl/CA/index.txt*
 openssl-etc/ssl/CA/serial*
@@ -5,4 +6,5 @@ openssl-etc/ssl/CA/serial*
 openssl-etc/ssl/server/**/*.pem
 
 openssl-etc/ssl/client/**/*.pem
+openssl-etc/ssl/client/**/*.pfx
 
