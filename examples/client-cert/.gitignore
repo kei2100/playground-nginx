@@ -4,3 +4,5 @@ openssl-etc/ssl/CA/serial*
 
 openssl-etc/ssl/server/**/*.pem
 
+openssl-etc/ssl/client/**/*.pem
+

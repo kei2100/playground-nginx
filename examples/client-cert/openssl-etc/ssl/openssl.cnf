@@ -358,3 +358,11 @@ nsCertType = server
 subjectKeyIdentifier=hash
 authorityKeyIdentifier=keyid,issuer
 
+[ client_ext ]
+basicConstraints = critical, CA:FALSE
+extendedKeyUsage = clientAuth
+keyUsage = critical, digitalSignature
+nsCertType =  client, email, objsign
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid,issuer
+

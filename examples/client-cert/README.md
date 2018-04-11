@@ -1,8 +1,9 @@
+## Prepare
 ### build image for openssl
 docker build -t playground-nginx/openssl -f Dockerfile.openssl .
 
+## CA
 ### create CSR for CA
-
 ```bash
 docker run -it -v $(pwd)/openssl-etc/ssl:/etc/ssl playground-nginx/openssl:latest \
  openssl req -new -newkey rsa:2048 -keyout ./CA/private/cakey.pem -out ./CA/careq.pem
@@ -16,7 +17,6 @@ Common Name (e.g. server FQDN or YOUR name) []:TestCA  # CommonName入力
 ```
 
 ### self-sign to CSR for CA
-
 ```bash
 touch ./openssl-etc/ssl/CA/index.txt
 
@@ -27,8 +27,8 @@ docker run -it -v $(pwd)/openssl-etc/ssl:/etc/ssl playground-nginx/openssl:lates
              -keyfile ./CA/private/cakey.pem
 ```
 
+## Server
 ### create CSR for Server
-
 TLSするためにServer証明書を作成しておく。
 
 ```bash
@@ -37,20 +37,38 @@ docker run -it -v $(pwd)/openssl-etc/ssl:/etc/ssl playground-nginx/openssl:lates
 ```
 
 ### sign to CSR for Server
-
 ```bash
 docker run -it -v $(pwd)/openssl-etc/ssl:/etc/ssl playground-nginx/openssl:latest \
   openssl ca -days 825 -in ./server/servreq.pem -out ./server/servcert.pem -extensions server_ext
 ```
 
 ### generate NO-PASS-PHRASE key for Server
-
 ```bash
 docker run -it -v $(pwd)/openssl-etc/ssl:/etc/ssl playground-nginx/openssl:latest \
   openssl rsa -in ./server/private/servkey.pem -out ./server/private/servkey-nopass.pem
 ```
 
+## Client
+### create CSR for Client
 
+```bash
+docker run -it -v $(pwd)/openssl-etc/ssl:/etc/ssl playground-nginx/openssl:latest \
+ openssl req -new -newkey rsa:2048 -keyout ./client/private/clikey.pem -out ./client/clireq.pem
+```
+
+### sign to CSR for Client
+```bash
+docker run -it -v $(pwd)/openssl-etc/ssl:/etc/ssl playground-nginx/openssl:latest \
+  openssl ca -days 825 -in ./client/clireq.pem -out ./client/clicert.pem -extensions client_ext
+```
+
+### change Client cert format to PKCS#12
+```bash
+docker run -it -v $(pwd)/openssl-etc/ssl:/etc/ssl playground-nginx/openssl:latest \
+  openssl pkcs12 -export -in ./client/clicert.pem -inkey ./client/private/clikey.pem -out ./client/clicert.pfx -name "my client"
+```
+
+## Test
 ### run Nginx
 ```bash
  docker run -p 8000:80 -p 443:443 -v $(pwd)/openssl-etc/ssl:/etc/ssl -v $(pwd)/nginx-etc/nginx/conf.d:/etc/nginx/conf.d  playground-nginx:latest
