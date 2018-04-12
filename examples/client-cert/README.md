@@ -65,10 +65,27 @@ docker run -it -v $(pwd)/openssl-etc/ssl:/etc/ssl playground-nginx/openssl:lates
 ### change Client cert format to PKCS#12
 ```bash
 docker run -it -v $(pwd)/openssl-etc/ssl:/etc/ssl playground-nginx/openssl:latest \
-  openssl pkcs12 -export -in ./client/clicert.pem -inkey ./client/private/clikey.pem -out ./client/clicert.pfx -name "my client"
+  openssl pkcs12 -export -in ./client/clicert.pem -inkey ./client/private/clikey.pem -out ./client/clicert.pfx
 ```
 
 OSXであればclicert.pfxを開くなどしてキーチェーンにインポートする
+
+## Revoke certificate
+### create or update CRL list
+```
+# crlnumberがなければ作成しておく
+echo '00' > openssl-etc/ssl/CA/crlnumber
+
+docker run -it -v $(pwd)/openssl-etc/ssl:/etc/ssl playground-nginx/openssl:latest \
+ openssl ca -gencrl -crldays 100 -out ./CA/crl/crl.pem
+```
+
+### revoke
+```
+# ./CA/newcertsから探しても良い
+docker run -it -v $(pwd)/openssl-etc/ssl:/etc/ssl playground-nginx/openssl:latest \
+ openssl ca -revoke ./client/revoke_test_cert.pem
+```
 
 ## Test
 ### run Nginx

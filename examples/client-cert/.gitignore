@@ -2,6 +2,7 @@
 openssl-etc/ssl/CA/**/*.pem
 openssl-etc/ssl/CA/index.txt*
 openssl-etc/ssl/CA/serial*
+openssl-etc/ssl/CA/crlnumber*
 
 openssl-etc/ssl/server/**/*.pem
 
