@@ -77,7 +77,7 @@ OSXであればclicert.pfxを開くなどしてキーチェーンにインポー
 echo '00' > openssl-etc/ssl/CA/crlnumber
 
 docker run -it -v $(pwd)/openssl-etc/ssl:/etc/ssl playground-nginx/openssl:latest \
- openssl ca -gencrl -crldays 100 -out ./CA/crl/crl.pem
+ openssl ca -updatedb -gencrl -crldays 100 -out ./CA/crl/crl.pem
 ```
 
 ### revoke
